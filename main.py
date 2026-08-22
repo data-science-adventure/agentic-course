@@ -1,54 +1,39 @@
-import os
 from dotenv import load_dotenv
-from rich.console import Console
-from langchain_huggingface import HuggingFacePipeline
-from langchain_core.prompts import PromptTemplate
-from langchain_core.output_parsers import StrOutputParser
 
+from langchain.agents import create_agent
+from langchain_tavily import TavilySearch
+from langchain_groq import ChatGroq
+from rich.console import Console
+
+load_dotenv()
 console = Console()
 
+# Initialize Groq LLM (gpt-oss-20b executes tool loops reliably)
+llm = ChatGroq(model="openai/gpt-oss-20b", temperature=0)
+
+# Limit results to 1 to keep context within token limits
+tools = [TavilySearch(max_results=1)]
+
+agent = create_agent(
+    model=llm, 
+    tools=tools,
+    system_prompt="You are a helpful AI assistant equipped with web search. Always synthesize search results into a concise final response."
+)
+
 def main():
-    # 1. Load environment variables to enable LangSmith tracing
-    load_dotenv()
-
-    console.rule("[bold cyan]🤖 AI Agent - Class 1 Demo[/bold cyan]")
-    console.print("\n[bold yellow]🚀 Initializing LangSmith & Local Model...[/bold yellow]\n")
-
-    # 2. Initialize Hugging Face model
-    llm = HuggingFacePipeline.from_model_id(
-        model_id="gpt2",
-        task="text-generation",
-        pipeline_kwargs={
-            "max_new_tokens": 50,
-            "temperature": 0.7,
-            "pad_token_id": 50256,
-        },
-    )
-
-    console.print("[bold green]✓ Model loaded successfully![/bold green]\n")
-
-    # 3. Create Prompt Template
-    prompt = PromptTemplate.from_template(
-        "Question: {pregunta}\nAnswer in simple terms:"
-    )
-
-    # 4. Build Chain using LCEL
-    chain = prompt | llm | StrOutputParser()
-
-    # 5. Run execution
-    pregunta_usuario = "How are you?"
+    console.print("[bold green]Starting Module 3: Tavily Web Search Agent...[/bold green]")
     
-    console.print(f"[bold white]Question:[/bold white] [italic]{pregunta_usuario}[/italic]\n")
-    console.print("[bold magenta]Processing response with LangChain...[/bold magenta]\n")
-
-    respuesta = chain.invoke({"pregunta": pregunta_usuario})
-
-    # Output results
-    console.print("[bold green]--- Response Generated ---[/bold green]")
-    console.print(f"[bright_white]{respuesta.strip()}[/bright_white]")
-    console.print("[bold green]--------------------------[/bold green]")
+    query = "search for 3 job postings for an ai engineer using langchain in the bay area on linkedin and list their details?"
     
-    console.print("\n[bold cyan]✅ Execution finished! Check your LangSmith dashboard for the trace.[/bold cyan]\n")
+    # Pass input as standard string key
+    result = agent.invoke({"messages": [("user", query)]})
+    
+    # Extract final message content
+    final_output = result["messages"][-1].content
+    
+    console.print("\n[bold yellow]Agent Response:[/bold yellow]")
+    console.print(final_output)
+
 
 if __name__ == "__main__":
     main()
