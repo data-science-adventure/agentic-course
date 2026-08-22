@@ -1,54 +1,58 @@
-import os
 from dotenv import load_dotenv
+from langchain.agents import create_agent
+from langchain_core.tools import tool
+from langchain_groq import ChatGroq
 from rich.console import Console
-from langchain_huggingface import HuggingFacePipeline
-from langchain_core.prompts import PromptTemplate
-from langchain_core.output_parsers import StrOutputParser
+from rich.panel import Panel
 
+load_dotenv()
 console = Console()
 
+# 1. Define Tools using @tool decorator
+@tool
+def get_current_weather(location: str) -> str:
+    """Get the current weather for a given location."""
+    location_lower = location.lower()
+    if "tokyo" in location_lower:
+        return "18°C, Light Rain"
+    elif "madrid" in location_lower:
+        return "26°C, Sunny"
+    else:
+        return "22°C, Partly Cloudy"
+
+
+@tool
+def calculate_word_length(text: str) -> str:
+    """Calculate the number of characters and words in a given text string."""
+    word_count = len(text.split())
+    char_count = len(text)
+    return f"Word count: {word_count}, Character count: {char_count}"
+
+
 def main():
-    # 1. Load environment variables to enable LangSmith tracing
-    load_dotenv()
 
-    console.rule("[bold cyan]🤖 AI Agent - Class 1 Demo[/bold cyan]")
-    console.print("\n[bold yellow]🚀 Initializing LangSmith & Local Model...[/bold yellow]\n")
+    # Tools array
+    tools = [get_current_weather, calculate_word_length]
 
-    # 2. Initialize Hugging Face model
-    llm = HuggingFacePipeline.from_model_id(
-        model_id="gpt2",
-        task="text-generation",
-        pipeline_kwargs={
-            "max_new_tokens": 50,
-            "temperature": 0.7,
-            "pad_token_id": 50256,
-        },
+    # Initialize Groq LLM
+    llm = ChatGroq(
+        model="openai/gpt-oss-20b",
+        temperature=0,
     )
 
-    console.print("[bold green]✓ Model loaded successfully![/bold green]\n")
-
-    # 3. Create Prompt Template
-    prompt = PromptTemplate.from_template(
-        "Question: {pregunta}\nAnswer in simple terms:"
+    # Modern LangChain agent initialization
+    agent = create_agent(
+        model=llm,
+        tools=tools,
+        system_prompt="You are a helpful AI assistant equipped with tools. Use your available tools when necessary to answer questions.",
     )
 
-    # 4. Build Chain using LCEL
-    chain = prompt | llm | StrOutputParser()
-
-    # 5. Run execution
-    pregunta_usuario = "How are you?"
+    query = "What is the weather in Tokyo right now, and how many words are in the sentence 'Artificial Intelligence is awesome'?"
+    response = agent.invoke({"messages": [{"role": "user", "content": query}]})
     
-    console.print(f"[bold white]Question:[/bold white] [italic]{pregunta_usuario}[/italic]\n")
-    console.print("[bold magenta]Processing response with LangChain...[/bold magenta]\n")
-
-    respuesta = chain.invoke({"pregunta": pregunta_usuario})
-
-    # Output results
-    console.print("[bold green]--- Response Generated ---[/bold green]")
-    console.print(f"[bright_white]{respuesta.strip()}[/bright_white]")
-    console.print("[bold green]--------------------------[/bold green]")
-    
-    console.print("\n[bold cyan]✅ Execution finished! Check your LangSmith dashboard for the trace.[/bold cyan]\n")
+    # The final answer lives in the last message
+    final_output = response["messages"][-1].content
+    console.print(final_output)
 
 if __name__ == "__main__":
     main()
