@@ -1,4 +1,3 @@
-import os
 from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -10,12 +9,9 @@ load_dotenv()
 console = Console()
 
 def main():
-    if not os.getenv("GROQ_API_KEY"):
-        console.print("[bold red]Error:[/bold red] GROQ_API_KEY is missing in .env")
-        return
 
     # Initialize model (runs on Groq's fast hardware)
-    model = ChatGroq(
+    llm = ChatGroq(
         model="qwen/qwen3.6-27b",
         temperature=0.7,
     )
@@ -25,7 +21,7 @@ def main():
     )
 
     # LCEL Chain
-    chain = prompt | model | StrOutputParser()
+    chain = prompt | llm | StrOutputParser()
 
     query = "How are you?"
     console.print(f"[bold yellow]User Query:[/bold yellow] {query}\n")

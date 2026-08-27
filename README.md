@@ -139,5 +139,5 @@ if __name__ == "__main__":
 Run the script using Python module execution syntax with `uv`:
 
 ```bash
-uv run python -m src.agents.groq_agent
+uv run main.py
 ```
