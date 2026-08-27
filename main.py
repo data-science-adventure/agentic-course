@@ -1,54 +1,51 @@
-import os
+from typing import List
+from pydantic import BaseModel, Field
+
+
+class Source(BaseModel):
+    """Schema for an individual source cited by the agent."""
+
+    url: str = Field(description="The web URL of the cited source.")
+
+
+class AgentResponse(BaseModel):
+    """Schema for final structured answer and its citations."""
+
+    answer: str = Field(description="The comprehensive text answer.")
+    sources: List[Source] = Field(
+        default_factory=list,
+        description="List of web sources used to answer the query.",
+    )
+
+
 from dotenv import load_dotenv
-from rich.console import Console
-from langchain_huggingface import HuggingFacePipeline
-from langchain_core.prompts import PromptTemplate
-from langchain_core.output_parsers import StrOutputParser
+from langchain.agents import create_agent
+from langchain.agents.structured_output import ToolStrategy
+from langchain_groq import ChatGroq
 
-console = Console()
+load_dotenv()
 
-def main():
-    # 1. Load environment variables to enable LangSmith tracing
-    load_dotenv()
+# Initialize LLM
+llm = ChatGroq(model="openai/gpt-oss-20b", temperature=0)
 
-    console.rule("[bold cyan]🤖 AI Agent - Class 1 Demo[/bold cyan]")
-    console.print("\n[bold yellow]🚀 Initializing LangSmith & Local Model...[/bold yellow]\n")
+# Bind the Pydantic schema using ToolStrategy
+agent = create_agent(
+    model=llm,
+    tools=[],  # Add external tools here if needed
+    response_format=ToolStrategy(AgentResponse),
+    system_prompt="Provide concise single-paragraph answers without line breaks or markdown formatting in your tool arguments.",
+)
 
-    # 2. Initialize Hugging Face model
-    llm = HuggingFacePipeline.from_model_id(
-        model_id="gpt2",
-        task="text-generation",
-        pipeline_kwargs={
-            "max_new_tokens": 50,
-            "temperature": 0.7,
-            "pad_token_id": 50256,
-        },
-    )
+# Execute the agent
+result = agent.invoke(
+    {
+        "messages": [
+            ("user", "What is LangChain? Provide the answer and mock source URL.")
+        ]
+    }
+)
 
-    console.print("[bold green]✓ Model loaded successfully![/bold green]\n")
-
-    # 3. Create Prompt Template
-    prompt = PromptTemplate.from_template(
-        "Question: {pregunta}\nAnswer in simple terms:"
-    )
-
-    # 4. Build Chain using LCEL
-    chain = prompt | llm | StrOutputParser()
-
-    # 5. Run execution
-    pregunta_usuario = "How are you?"
-    
-    console.print(f"[bold white]Question:[/bold white] [italic]{pregunta_usuario}[/italic]\n")
-    console.print("[bold magenta]Processing response with LangChain...[/bold magenta]\n")
-
-    respuesta = chain.invoke({"pregunta": pregunta_usuario})
-
-    # Output results
-    console.print("[bold green]--- Response Generated ---[/bold green]")
-    console.print(f"[bright_white]{respuesta.strip()}[/bright_white]")
-    console.print("[bold green]--------------------------[/bold green]")
-    
-    console.print("\n[bold cyan]✅ Execution finished! Check your LangSmith dashboard for the trace.[/bold cyan]\n")
-
-if __name__ == "__main__":
-    main()
+# Access typed output via "structured_response"
+structured_data = result["structured_response"]
+print(f"Answer: {structured_data.answer}")
+print(f"Sources: {structured_data.sources}")
