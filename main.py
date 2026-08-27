@@ -4,6 +4,7 @@ from langchain_core.tools import tool
 from langchain_groq import ChatGroq
 from rich.console import Console
 from rich.panel import Panel
+from datetime import datetime
 
 load_dotenv()
 console = Console()
@@ -22,17 +23,20 @@ def get_current_weather(location: str) -> str:
 
 
 @tool
-def calculate_word_length(text: str) -> str:
-    """Calculate the number of characters and words in a given text string."""
-    word_count = len(text.split())
-    char_count = len(text)
-    return f"Word count: {word_count}, Character count: {char_count}"
+def get_time() -> str:
+    """Gets the current local date and time.
+
+    Returns:
+        str: A formatted string containing the current date and time (YYYY-MM-DD HH:MM:SS).
+    """
+    now = datetime.now()
+    return f"Current time: {now.strftime('%Y-%m-%d %H:%M:%S')}"
 
 
 def main():
 
     # Tools array
-    tools = [get_current_weather, calculate_word_length]
+    tools = [get_current_weather, get_time]
 
     # Initialize Groq LLM
     llm = ChatGroq(
@@ -47,7 +51,7 @@ def main():
         system_prompt="You are a helpful AI assistant equipped with tools. Use your available tools when necessary to answer questions.",
     )
 
-    query = "What is the weather in Tokyo right now, and how many words are in the sentence 'Artificial Intelligence is awesome'?"
+    query = "What is the weather in Tokyo right now, and how many words are in the sentence 'Artificial Intelligence is awesome'? and Give me the time"
     response = agent.invoke({"messages": [{"role": "user", "content": query}]})
     
     # The final answer lives in the last message
