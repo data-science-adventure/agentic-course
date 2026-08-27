@@ -1,54 +1,45 @@
 import os
 from dotenv import load_dotenv
-from rich.console import Console
-from langchain_huggingface import HuggingFacePipeline
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+from langchain_groq import ChatGroq
+from rich.console import Console
+from rich.panel import Panel
 
+load_dotenv()
 console = Console()
 
 def main():
-    # 1. Load environment variables to enable LangSmith tracing
-    load_dotenv()
+    if not os.getenv("GROQ_API_KEY"):
+        console.print("[bold red]Error:[/bold red] GROQ_API_KEY is missing in .env")
+        return
 
-    console.rule("[bold cyan]🤖 AI Agent - Class 1 Demo[/bold cyan]")
-    console.print("\n[bold yellow]🚀 Initializing LangSmith & Local Model...[/bold yellow]\n")
-
-    # 2. Initialize Hugging Face model
-    llm = HuggingFacePipeline.from_model_id(
-        model_id="gpt2",
-        task="text-generation",
-        pipeline_kwargs={
-            "max_new_tokens": 50,
-            "temperature": 0.7,
-            "pad_token_id": 50256,
-        },
+    # Initialize model (runs on Groq's fast hardware)
+    model = ChatGroq(
+        model="qwen/qwen3.6-27b",
+        temperature=0.7,
     )
 
-    console.print("[bold green]✓ Model loaded successfully![/bold green]\n")
-
-    # 3. Create Prompt Template
     prompt = PromptTemplate.from_template(
-        "Question: {pregunta}\nAnswer in simple terms:"
+        "You are a helpful AI assistant. Answer the query: {query}"
     )
 
-    # 4. Build Chain using LCEL
-    chain = prompt | llm | StrOutputParser()
+    # LCEL Chain
+    chain = prompt | model | StrOutputParser()
 
-    # 5. Run execution
-    pregunta_usuario = "How are you?"
-    
-    console.print(f"[bold white]Question:[/bold white] [italic]{pregunta_usuario}[/italic]\n")
-    console.print("[bold magenta]Processing response with LangChain...[/bold magenta]\n")
+    query = "How are you?"
+    console.print(f"[bold yellow]User Query:[/bold yellow] {query}\n")
 
-    respuesta = chain.invoke({"pregunta": pregunta_usuario})
+    with console.status("[bold cyan]Generating response via Groq...[/bold cyan]"):
+        response = chain.invoke({"query": query})
 
-    # Output results
-    console.print("[bold green]--- Response Generated ---[/bold green]")
-    console.print(f"[bright_white]{respuesta.strip()}[/bright_white]")
-    console.print("[bold green]--------------------------[/bold green]")
-    
-    console.print("\n[bold cyan]✅ Execution finished! Check your LangSmith dashboard for the trace.[/bold cyan]\n")
+    console.print(
+        Panel(
+            response,
+            title="[bold green]Groq Response[/bold green]",
+            border_style="green",
+        )
+    )
 
 if __name__ == "__main__":
     main()
