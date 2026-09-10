@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReAct Agent Interactive Flow Visualizer</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .glass-panel {
+            backdrop-filter: blur(12px);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        /* SVG Highlighting Classes */
+        .diagram-element {
+            transition: all 0.3s ease-in-out;
+        }
+        .dimmed {
+            opacity: 0.25;
+            filter: grayscale(80%);
+        }
+        .active-element {
+            opacity: 1 !important;
+            filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.6)) !important;
+        }
+        .active-stroke {
+            stroke: #f59e0b !important;
+            stroke-width: 3.5px !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased pb-12 bg-slate-100 text-slate-900 dark:bg-[#0b0f19] dark:text-slate-100">
+
+    <!-- Header -->
+    <header class="border-b border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/50 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 bg-indigo-500/10 text-indigo-600 dark:bg-indigo-600/20 dark:text-indigo-400 rounded-xl border border-indigo-500/20 dark:border-indigo-500/30">
+                    <i data-lucide="bot" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">ReAct Agent Flow Diagram</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Interactive Execution Loop & Payload Inspector</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <!-- JSON File Upload Button -->
+                <label for="json-upload" class="cursor-pointer flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-200/50 dark:bg-slate-800/80 hover:bg-slate-300/50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors">
+                    <i data-lucide="upload" class="w-4 h-4"></i>
+                    <span>Upload JSON</span>
+                    <input type="file" id="json-upload" accept=".json" class="hidden" onchange="handleFileUpload(event)">
+                </label>
+
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" onclick="toggleTheme()" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-200/50 dark:bg-slate-800/80 hover:bg-slate-300/50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors" title="Toggle Theme">
+                    <i id="theme-toggle-icon" data-lucide="sun" class="w-4 h-4"></i>
+                </button>
+                <span id="model-badge" class="px-3 py-1 rounded-full text-xs font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700">
+                    Model: Loading...
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 mt-8">
+
+        <!-- Metrics Dashboard -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" id="metrics-bar"></section>
+
+        <!-- Main Workspace Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Left Column: Message Step Timeline -->
+            <div class="lg:col-span-6 space-y-6">
+                <div class="space-y-4">
+                    <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <i data-lucide="list-ordered" class="w-4 h-4 text-indigo-500 dark:text-indigo-400"></i>
+                        Agent Trace History (Click card to activate)
+                    </h3>
+                    <div id="flow-container" class="relative pl-6 space-y-4 before:absolute before:left-3 before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-300 dark:before:bg-slate-800"></div>
+                </div>
+            </div>
+
+            <!-- Right Column: Sticky Diagram & Inspector Panel -->
+            <div class="lg:col-span-6">
+                <div class="sticky top-20 space-y-6">
+                    
+                    <!-- Diagram Card -->
+                    <div class="glass-panel bg-white/80 dark:bg-slate-900/70 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-sm font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                                <i data-lucide="workflow" class="w-4 h-4 text-amber-500 dark:text-amber-400"></i>
+                                Live ReAct Execution State
+                            </h2>
+                            <span id="active-state-label" class="text-xs px-2.5 py-1 rounded font-mono bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+                                State: Idle
+                            </span>
+                        </div>
+
+                        <!-- SVG Diagram -->
+                        <div class="w-full flex justify-center py-2 bg-slate-50 dark:bg-slate-950/50 rounded-xl border border-slate-200 dark:border-slate-800/80">
+                            <svg id="react-svg" viewBox="0 0 520 330" class="w-full h-auto max-w-md">
+                                <defs>
+                                    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b" id="arrow-head"/>
+                                    </marker>
+                                </defs>
+
+                                <!-- QUERY NODE -->
+                                <g id="node-query" class="diagram-element">
+                                    <rect x="180" y="15" width="140" height="48" rx="12" fill="#ffffff" stroke="#1e293b" stroke-width="2.5"/>
+                                    <text x="250" y="44" text-anchor="middle" font-weight="700" fill="#0f172a" font-size="16">Query</text>
+                                </g>
+
+                                <!-- PATH: QUERY -> THOUGHT -->
+                                <path id="path-query-thought" class="diagram-element" d="M 250 63 L 250 115" stroke="#64748b" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+                                <!-- THOUGHT NODE (Diamond) -->
+                                <g id="node-thought" class="diagram-element">
+                                    <polygon points="250,118 340,158 250,198 160,158" fill="#fef08a" stroke="#1e293b" stroke-width="2.5"/>
+                                    <text x="250" y="164" text-anchor="middle" font-weight="700" fill="#0f172a" font-size="16">Thought</text>
+                                </g>
+
+                                <!-- ACTION PATH -->
+                                <g id="path-action" class="diagram-element">
+                                    <path id="stroke-action" d="M 175 172 C 115 190 70 220 60 260" fill="none" stroke="#64748b" stroke-width="2.5" marker-end="url(#arrow)"/>
+                                    <text x="95" y="222" font-size="13" font-weight="600" class="fill-slate-600 dark:fill-slate-300">Action</text>
+                                </g>
+
+                                <!-- TOOL NODE -->
+                                <g id="node-tool" class="diagram-element">
+                                    <rect x="15" y="265" width="130" height="50" rx="12" fill="#fca5a5" stroke="#1e293b" stroke-width="2.5"/>
+                                    <text x="80" y="295" text-anchor="middle" font-weight="700" fill="#0f172a" font-size="16">Tool</text>
+                                </g>
+
+                                <!-- OBSERVATION PATH -->
+                                <g id="path-observation" class="diagram-element">
+                                    <path id="stroke-observation" d="M 115 265 C 150 230 180 210 215 188" fill="none" stroke="#64748b" stroke-width="2.5" marker-end="url(#arrow)"/>
+                                    <text x="180" y="240" font-size="13" font-weight="600" class="fill-slate-600 dark:fill-slate-300">Observation</text>
+                                </g>
+
+                                <!-- ANSWER PATH -->
+                                <path id="path-answer" class="diagram-element" d="M 340 158 L 385 158" stroke="#64748b" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrow)"/>
+
+                                <!-- ANSWER NODE -->
+                                <g id="node-answer" class="diagram-element">
+                                    <rect x="390" y="133" width="115" height="50" rx="12" fill="#ffffff" stroke="#1e293b" stroke-width="2.5"/>
+                                    <text x="447" y="163" text-anchor="middle" font-weight="700" fill="#0f172a" font-size="16">Answer</text>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Step Inspector Card -->
+                    <div class="glass-panel bg-white/80 dark:bg-slate-900/70 rounded-2xl p-6 shadow-xl border border-slate-200 dark:border-slate-800" id="inspector-panel">
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-700/60 mb-4">
+                            <h3 class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                                <i data-lucide="search" class="w-4 h-4 text-purple-500 dark:text-purple-400"></i>
+                                Step Inspector
+                            </h3>
+                            <span id="inspector-step-type" class="text-xs px-2.5 py-1 rounded-md font-mono bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400">
+                                Select a node
+                            </span>
+                        </div>
+                        <div id="inspector-content" class="text-sm text-slate-700 dark:text-slate-300 space-y-4"></div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Embedded Data & Interactive Engine -->
+    <script>
+let inspectData = [
+  {
+    "type": "HumanMessage",
+    "content": "What is the weather in Tokyo right now, and how many words are in the sentence 'Artificial Intelligence is awesome'? and \nGive me the time",
+    "additional_kwargs": {},
+    "response_metadata": {},
+    "id": "9196b04b-1371-4117-8ee0-d3c12482e88e"
+  },
+  {
+    "type": "AIMessage",
+    "content": "",
+    "additional_kwargs": {
+      "reasoning_content": "The user asks: \"What is the weather in Tokyo right now, and how many words are in the sentence 'Artificial\nIntelligence is awesome'? and Give me the time\"\n\nWe need to provide weather in Tokyo, word count of that sentence, and current time. We \nhave tools: get_current_weather and get_time. We'll call get_current_weather with location \"Tokyo\". Then get_time. Then count words: \n\"Artificial Intelligence is awesome\" has 4 words. Provide answer.",
+      "tool_calls": [
+        {
+          "id": "fc_4038667c-f418-4923-93ca-995e27a4c62e",
+          "function": {
+            "arguments": "{\"location\":\"Tokyo\"}",
+            "name": "get_current_weather"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    "response_metadata": {
+      "token_usage": {
+        "completion_tokens": 120,
+        "prompt_tokens": 220,
+        "total_tokens": 340,
+        "completion_time": 0.155786798,
+        "completion_tokens_details": {
+          "reasoning_tokens": 96
+        },
+        "prompt_time": 0.011658395,
+        "prompt_tokens_details": null,
+        "queue_time": 0.095606709,
+        "total_time": 0.167445193
+      },
+      "model_name": "openai/gpt-oss-20b",
+      "system_fingerprint": "fp_24bfb4a850",
+      "service_tier": "on_demand",
+      "finish_reason": "tool_calls",
+      "logprobs": null,
+      "model_provider": "groq"
+    },
+    "id": "lc_run--01a08c4a-6d4b-7ee1-8977-2374a9997968-0",
+    "tool_calls": [
+      {
+        "name": "get_current_weather",
+        "args": {
+          "location": "Tokyo"
+        },
+        "id": "fc_4038667c-f418-4923-93ca-995e27a4c62e",
+        "type": "tool_call"
+      }
+    ],
+    "invalid_tool_calls": [],
+    "usage_metadata": {
+      "input_tokens": 220,
+      "output_tokens": 120,
+      "total_tokens": 340,
+      "output_token_details": {
+        "reasoning": 96
+      }
+    }
+  },
+  {
+    "type": "ToolMessage",
+    "content": "18°C, Light Rain",
+    "name": "get_current_weather",
+    "id": "d0e32849-6d96-40d4-8e07-2e5a58ce304d",
+    "tool_call_id": "fc_4038667c-f418-4923-93ca-995e27a4c62e"
+  },
+  {
+    "type": "AIMessage",
+    "content": "",
+    "additional_kwargs": {
+      "reasoning_content": "We need to answer: weather in Tokyo right now, number of words in sentence 'Artificial Intelligence is \nawesome', and give me the time. We have weather: 18°C, Light Rain. Need word count: sentence has 4 words? Let's count: \"Artificial\" (1), \n\"Intelligence\" (2), \"is\" (3), \"awesome\" (4). So 4 words. Need current time. Use get_time.",
+      "tool_calls": [
+        {
+          "id": "fc_59953c55-bb19-4b0c-95d6-43a05fa24be2",
+          "function": {
+            "arguments": "{}",
+            "name": "get_time"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    "response_metadata": {
+      "token_usage": {
+        "completion_tokens": 110,
+        "prompt_tokens": 252,
+        "total_tokens": 362,
+        "completion_time": 0.127392246,
+        "completion_tokens_details": {
+          "reasoning_tokens": 91
+        },
+        "prompt_time": 0.022014388,
+        "prompt_tokens_details": null,
+        "queue_time": 0.076138786,
+        "total_time": 0.149406634
+      },
+      "model_name": "openai/gpt-oss-20b",
+      "system_fingerprint": "fp_66f3850a1a",
+      "service_tier": "on_demand",
+      "finish_reason": "tool_calls",
+      "logprobs": null,
+      "model_provider": "groq"
+    },
+    "id": "lc_run--01a08c4a-6ef1-7780-90a5-fe7998a77149-0",
+    "tool_calls": [
+      {
+        "name": "get_time",
+        "args": {},
+        "id": "fc_59953c55-bb19-4b0c-95d6-43a05fa24be2",
+        "type": "tool_call"
+      }
+    ],
+    "invalid_tool_calls": [],
+    "usage_metadata": {
+      "input_tokens": 252,
+      "output_tokens": 110,
+      "total_tokens": 362,
+      "output_token_details": {
+        "reasoning": 91
+      }
+    }
+  },
+  {
+    "type": "ToolMessage",
+    "content": "Current time: 2026-09-10 11:08:03",
+    "name": "get_time",
+    "id": "b209b6c2-fcc6-40ab-9a6f-1d9643f55999",
+    "tool_call_id": "fc_59953c55-bb19-4b0c-95d6-43a05fa24be2"
+  },
+  {
+    "type": "AIMessage",
+    "content": "- **Weather in Tokyo (now):** 18\u202f°C, Light Rain  \n- **Word count of “Artificial Intelligence is awesome”:** 4 words  \n- **Current time:** 2026‑09‑10 11:08:03",
+    "additional_kwargs": {
+      "reasoning_content": "We need to answer: weather in Tokyo right now, number of words in sentence, and give time. We have weather:\n18°C, Light Rain. Sentence: \"Artificial Intelligence is awesome\" has 4 words? Let's count: Artificial(1) Intelligence(2) is(3) awesome(4). \nSo 4 words. Time: 2026-09-10 11:08:03. Provide answer."
+    },
+    "response_metadata": {
+      "token_usage": {
+        "completion_tokens": 149,
+        "prompt_tokens": 288,
+        "total_tokens": 437,
+        "completion_time": 0.226530994,
+        "completion_tokens_details": {
+          "reasoning_tokens": 89
+        },
+        "prompt_time": 0.013979505,
+        "prompt_tokens_details": null,
+        "queue_time": 0.082499518,
+        "total_time": 0.240510499
+      },
+      "model_name": "openai/gpt-oss-20b",
+      "system_fingerprint": "fp_5979a0e1b7",
+      "service_tier": "on_demand",
+      "finish_reason": "stop",
+      "logprobs": null,
+      "model_provider": "groq"
+    },
+    "id": "lc_run--01a08c4a-7088-7873-84d8-b95b134fb38c-0",
+    "tool_calls": [],
+    "invalid_tool_calls": [],
+    "usage_metadata": {
+      "input_tokens": 288,
+      "output_tokens": 149,
+      "total_tokens": 437,
+      "output_token_details": {
+        "reasoning": 89
+      }
+    }
+  }
+];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            renderMetrics();
+            renderTimeline();
+            if (inspectData.length > 0) {
+                selectStep(0);
+            }
+            lucide.createIcons();
+        });
+
+        // --- Calculation Helpers ---
+        function calculateReActRounds(data) {
+            if (!Array.isArray(data)) return 0;
+            return data.filter(item => item.type === 'ToolMessage').length;
+        }
+
+        // --- JSON File Upload Handler ---
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsedData = JSON.parse(e.target.result);
+                    if (Array.isArray(parsedData)) {
+                        inspectData = parsedData;
+                        renderMetrics();
+                        renderTimeline();
+                        if (inspectData.length > 0) {
+                            selectStep(0);
+                        } else {
+                            document.getElementById('inspector-content').innerHTML = '';
+                        }
+                        lucide.createIcons();
+                    } else {
+                        alert("Invalid JSON structure: File must contain an array of message objects.");
+                    }
+                } catch (err) {
+                    alert("Error parsing JSON file: " + err.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // --- Theme Switcher Logic ---
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light' || (!savedTheme && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+                document.documentElement.classList.remove('dark');
+            } else {
+                document.documentElement.classList.add('dark');
+            }
+            updateThemeIcon();
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+            updateThemeIcon();
+        }
+
+        function updateThemeIcon() {
+            const icon = document.getElementById('theme-toggle-icon');
+            if (icon) {
+                const isDark = document.documentElement.classList.contains('dark');
+                icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+                lucide.createIcons();
+            }
+        }
+
+        // --- Core UI Renderers ---
+        function renderMetrics() {
+            let totalTokens = 0, reasoningTokens = 0, totalTime = 0, toolCount = 0, modelName = '';
+            inspectData.forEach(item => {
+                if (item.usage_metadata) {
+                    totalTokens += item.usage_metadata.total_tokens || 0;
+                    reasoningTokens += item.usage_metadata.output_token_details?.reasoning || 0;
+                }
+                if (item.response_metadata?.token_usage) {
+                    totalTime += item.response_metadata.token_usage.total_time || 0;
+                    modelName = item.response_metadata.model_name || modelName;
+                }
+                if (item.tool_calls?.length) toolCount += item.tool_calls.length;
+            });
+
+            const reactRounds = calculateReActRounds(inspectData);
+
+            document.getElementById('model-badge').innerText = `Model: ${modelName || 'openai/gpt-oss-20b'}`;
+
+            document.getElementById('metrics-bar').innerHTML = `
+                <div class="glass-panel bg-white/80 dark:bg-slate-900/70 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="text-xs text-slate-500 dark:text-slate-400 mb-1 flex items-center gap-1"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500 dark:text-amber-400"></i> Total Tokens</div>
+                    <div class="text-2xl font-bold text-slate-800 dark:text-white">${totalTokens}</div>
+                    <div class="text-[10px] text-slate-500 dark:text-slate-500 mt-0.5">${reasoningTokens} reasoning tokens</div>
+                </div>
+                <div class="glass-panel bg-white/80 dark:bg-slate-900/70 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="text-xs text-slate-500 dark:text-slate-400 mb-1 flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-blue-500 dark:text-blue-400"></i> Latency</div>
+                    <div class="text-2xl font-bold text-slate-800 dark:text-white">${totalTime.toFixed(3)}s</div>
+                    <div class="text-[10px] text-slate-500 dark:text-slate-500 mt-0.5">Summed execution turn time</div>
+                </div>
+                <div class="glass-panel bg-white/80 dark:bg-slate-900/70 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="text-xs text-slate-500 dark:text-slate-400 mb-1 flex items-center gap-1"><i data-lucide="wrench" class="w-3.5 h-3.5 text-purple-500 dark:text-purple-400"></i> Tool Calls</div>
+                    <div class="text-2xl font-bold text-slate-800 dark:text-white">${toolCount}</div>
+                    <div class="text-[10px] text-slate-500 dark:text-slate-500 mt-0.5">External API calls</div>
+                </div>
+                <div class="glass-panel bg-white/80 dark:bg-slate-900/70 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <div class="text-xs text-slate-500 dark:text-slate-400 mb-1 flex items-center gap-1"><i data-lucide="repeat" class="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400"></i> ReAct Rounds</div>
+                    <div class="text-2xl font-bold text-slate-800 dark:text-white">${reactRounds} ${reactRounds === 1 ? 'Loop' : 'Loops'}</div>
+                    <div class="text-[10px] text-slate-500 dark:text-slate-500 mt-0.5">Thought-Action-Observation</div>
+                </div>
+            `;
+        }
+
+        function renderTimeline() {
+            const container = document.getElementById('flow-container');
+            container.innerHTML = '';
+
+            inspectData.forEach((step, index) => {
+                const card = document.createElement('div');
+                card.className = "relative group cursor-pointer transition-all duration-200";
+                card.onclick = () => selectStep(index);
+
+                let icon = 'help-circle', iconColor = 'text-slate-400', title = '', preview = '';
+
+                if (step.type === 'HumanMessage') {
+                    icon = 'user'; iconColor = 'text-blue-500 dark:text-blue-400';
+                    title = 'Input User Query';
+                    preview = step.content;
+                } else if (step.type === 'AIMessage') {
+                    if (step.tool_calls?.length > 0) {
+                        icon = 'brain'; iconColor = 'text-amber-500 dark:text-amber-400';
+                        title = `Thought & Action: [${step.tool_calls[0].name}]`;
+                        preview = `<strong>Thought:</strong> ${(step.additional_kwargs?.reasoning_content || step.content || '').slice(0, 90)}...`;
+                    } else {
+                        icon = 'check-circle2'; iconColor = 'text-cyan-500 dark:text-cyan-400';
+                        title = 'Final Answer Generated';
+                        preview = (step.content || '').replace(/\n/g, '<br/>');
+                    }
+                } else if (step.type === 'ToolMessage') {
+                    icon = 'wrench'; iconColor = 'text-emerald-500 dark:text-emerald-400';
+                    title = `Observation from Tool [${step.name}]`;
+                    preview = `<strong>Result:</strong> ${step.content}`;
+                }
+
+                card.innerHTML = `
+                    <div class="absolute -left-[27px] top-4 w-4 h-4 rounded-full bg-slate-100 dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-700 group-hover:border-amber-500 flex items-center justify-center">
+                        <div class="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500 group-hover:bg-amber-500"></div>
+                    </div>
+                    <div class="glass-panel bg-white/80 dark:bg-slate-900/70 p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all shadow-md" id="step-card-${index}">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-semibold text-slate-800 dark:text-slate-200 text-xs flex items-center gap-2">
+                                <i data-lucide="${icon}" class="w-4 h-4 ${iconColor}"></i> ${title}
+                            </span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">Step ${index + 1}</span>
+                        </div>
+                        <div class="text-xs text-slate-700 dark:text-slate-300 font-sans bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded border border-slate-200/80 dark:border-slate-800/80">${preview}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function updateDiagramState(stepIndex) {
+            const data = inspectData[stepIndex];
+            if (!data) return;
+
+            const allElements = ['node-query', 'path-query-thought', 'node-thought', 'path-action', 'node-tool', 'path-observation', 'path-answer', 'node-answer'];
+            
+            allElements.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.add('dimmed');
+                    el.classList.remove('active-element');
+                    const paths = el.querySelectorAll('path, stroke-action, stroke-observation');
+                    paths.forEach(p => p.classList.remove('active-stroke'));
+                }
+            });
+
+            let activeIds = [];
+            let stateLabel = '';
+
+            if (data.type === 'HumanMessage') {
+                activeIds = ['node-query', 'path-query-thought'];
+                stateLabel = 'Phase: User Query Input';
+            } else if (data.type === 'AIMessage') {
+                if (data.tool_calls?.length > 0) {
+                    activeIds = ['node-thought', 'path-action', 'node-tool'];
+                    stateLabel = `Phase: Thought ➔ Action (${data.tool_calls[0].name})`;
+                } else {
+                    activeIds = ['node-thought', 'path-answer', 'node-answer'];
+                    stateLabel = 'Phase: Thought ➔ Final Answer';
+                }
+            } else if (data.type === 'ToolMessage') {
+                activeIds = ['node-tool', 'path-observation', 'node-thought'];
+                stateLabel = `Phase: Observation (${data.name}) ➔ Thought`;
+            }
+
+            document.getElementById('active-state-label').innerText = stateLabel;
+
+            activeIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.remove('dimmed');
+                    el.classList.add('active-element');
+                }
+            });
+        }
+
+        function selectStep(index) {
+            document.querySelectorAll('[id^="step-card-"]').forEach(el => {
+                el.classList.remove('ring-2', 'ring-amber-500', 'bg-slate-50', 'dark:bg-slate-800/90');
+            });
+
+            const selectedCard = document.getElementById(`step-card-${index}`);
+            if (selectedCard) {
+                selectedCard.classList.add('ring-2', 'ring-amber-500', 'bg-slate-50', 'dark:bg-slate-800/90');
+            }
+
+            updateDiagramState(index);
+
+            const data = inspectData[index];
+            if (!data) return;
+
+            document.getElementById('inspector-step-type').innerText = `Step ${index + 1} (${data.type})`;
+
+            let contentHtml = '';
+            if (data.type === 'HumanMessage') {
+                contentHtml = `
+                    <div class="space-y-3">
+                        <div>
+                            <span class="text-xs text-slate-500 dark:text-slate-400 block mb-1">User Input Query:</span>
+                            <div class="p-3 bg-slate-100 dark:bg-slate-900 rounded-lg text-xs font-mono text-blue-600 dark:text-blue-300 border border-slate-200 dark:border-slate-800 whitespace-pre-wrap">${escapeHtml(data.content)}</div>
+                        </div>
+                    </div>
+                `;
+            } else if (data.type === 'AIMessage') {
+                const reasoning = data.additional_kwargs?.reasoning_content || 'None';
+                const toolCalls = data.tool_calls || [];
+                const usage = data.usage_metadata || {};
+
+                contentHtml = `
+                    <div class="space-y-3">
+                        ${reasoning !== 'None' ? `
+                            <div>
+                                <span class="text-xs text-amber-600 dark:text-amber-400 font-medium block mb-1 flex items-center gap-1">
+                                    <i data-lucide="brain" class="w-3.5 h-3.5"></i> Thought / Chain-of-Thought:
+                                </span>
+                                <div class="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-500/20 rounded-lg text-xs text-amber-900 dark:text-amber-200 leading-relaxed">${escapeHtml(reasoning)}</div>
+                            </div>
+                        ` : ''}
+
+                        ${toolCalls.length > 0 ? `
+                            <div>
+                                <span class="text-xs text-purple-600 dark:text-purple-400 font-medium block mb-1 flex items-center gap-1">
+                                    <i data-lucide="wrench" class="w-3.5 h-3.5"></i> Tool Action Triggered:
+                                </span>
+                                <div class="p-3 bg-slate-100 dark:bg-slate-900 border border-purple-200 dark:border-purple-500/30 rounded-lg font-mono text-xs space-y-1">
+                                    <div><span class="text-slate-500">Name:</span> <span class="text-purple-700 dark:text-purple-300 font-semibold">${toolCalls[0].name}</span></div>
+                                    <div><span class="text-slate-500">Arguments:</span> <span class="text-emerald-600 dark:text-emerald-400">${JSON.stringify(toolCalls[0].args)}</span></div>
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        ${data.content ? `
+                            <div>
+                                <span class="text-xs text-cyan-600 dark:text-cyan-400 font-medium block mb-1 flex items-center gap-1">
+                                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Synthesized Response:
+                                </span>
+                                <div class="p-3 bg-cyan-50 dark:bg-cyan-950/20 border border-cyan-200 dark:border-cyan-500/30 rounded-lg text-xs text-cyan-900 dark:text-cyan-200 whitespace-pre-wrap">${escapeHtml(data.content)}</div>
+                            </div>
+                        ` : ''}
+
+                        <div class="border-t border-slate-200 dark:border-slate-800 pt-3 grid grid-cols-2 gap-2 text-[11px] font-mono">
+                            <div class="p-2 bg-slate-100 dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800">
+                                <span class="text-slate-500 block">Prompt Tokens</span>
+                                <span class="text-slate-800 dark:text-slate-200 font-bold">${usage.input_tokens || 0}</span>
+                            </div>
+                            <div class="p-2 bg-slate-100 dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800">
+                                <span class="text-slate-500 block">Reasoning Tokens</span>
+                                <span class="text-amber-600 dark:text-amber-400 font-bold">${usage.output_token_details?.reasoning || 0}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (data.type === 'ToolMessage') {
+                contentHtml = `
+                    <div class="space-y-3">
+                        <div>
+                            <span class="text-xs text-emerald-600 dark:text-emerald-400 font-medium block mb-1 flex items-center gap-1">
+                                <i data-lucide="wrench" class="w-3.5 h-3.5"></i> Tool Execution Name:
+                            </span>
+                            <code class="text-xs font-mono text-emerald-700 dark:text-emerald-300 bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded border border-slate-200 dark:border-slate-800">${data.name}</code>
+                        </div>
+                        <div>
+                            <span class="text-xs text-slate-500 dark:text-slate-400 block mb-1">Observation Result:</span>
+                            <div class="p-3 bg-slate-100 dark:bg-slate-900 rounded-lg text-xs font-mono text-emerald-700 dark:text-emerald-300 border border-slate-200 dark:border-slate-800">${escapeHtml(data.content)}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('inspector-content').innerHTML = contentHtml;
+            lucide.createIcons();
+        }
+
+        function escapeHtml(str) {
+            return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
