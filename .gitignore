@@ -11,3 +11,4 @@ wheels/
 .env
 
 blackboard.excalidraw
+inspect.json
