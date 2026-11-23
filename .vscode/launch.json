@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Typer Debug: Process Data",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "typer",
+            "justMyCode": true,
+            "args": [
+                "main.py",
+                "info",
+            ]
+        }
+    ]
+}
