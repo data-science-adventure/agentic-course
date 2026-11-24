@@ -1,0 +1,188 @@
+[
+  {
+    "content": "What is the weather in Tokyo right now, and how many words are in the sentence 'Artificial Intelligence is awesome'? and Give me the time",
+    "additional_kwargs": {},
+    "response_metadata": {},
+    "type": "HumanMessage",
+    "name": null,
+    "id": "c47bbead-3a06-48f2-bbd7-8ad481888bb2"
+  },
+  {
+    "content": "",
+    "additional_kwargs": {
+      "reasoning_content": "The user asks: \"What is the weather in Tokyo right now, and how many words are in the sentence 'Artificial Intelligence is awesome'? and Give me the time\"\n\nWe need to provide weather in Tokyo, word count of that sentence, and current time. We have tools: get_current_weather and get_time. We'll call get_current_weather with location \"Tokyo\". Then get_time. Then count words: \"Artificial Intelligence is awesome\" has 4 words. Provide answer.",
+      "tool_calls": [
+        {
+          "id": "fc_70fab492-9267-4e2f-9d88-47884480cc50",
+          "function": {
+            "arguments": "{\"location\":\"Tokyo\"}",
+            "name": "get_current_weather"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    "response_metadata": {
+      "token_usage": {
+        "completion_tokens": 120,
+        "prompt_tokens": 244,
+        "total_tokens": 364,
+        "completion_time": 0.125673037,
+        "completion_tokens_details": {
+          "reasoning_tokens": 96
+        },
+        "prompt_time": 0.011923036,
+        "prompt_tokens_details": null,
+        "queue_time": 0.136534039,
+        "total_time": 0.137596073
+      },
+      "model_name": "openai/gpt-oss-20b",
+      "system_fingerprint": "fp_feb9b278f1",
+      "service_tier": "on_demand",
+      "finish_reason": "tool_calls",
+      "logprobs": null,
+      "model_provider": "groq"
+    },
+    "type": "AIMessage",
+    "name": null,
+    "id": "lc_run--01a20eea-f435-7323-9d81-f8c5789bdc5e-0",
+    "tool_calls": [
+      {
+        "name": "get_current_weather",
+        "args": {
+          "location": "Tokyo"
+        },
+        "id": "fc_70fab492-9267-4e2f-9d88-47884480cc50",
+        "type": "tool_call"
+      }
+    ],
+    "invalid_tool_calls": [],
+    "usage_metadata": {
+      "input_tokens": 244,
+      "output_tokens": 120,
+      "total_tokens": 364,
+      "output_token_details": {
+        "reasoning": 96
+      }
+    }
+  },
+  {
+    "content": "18°C, Light Rain",
+    "additional_kwargs": {},
+    "response_metadata": {},
+    "type": "ToolMessage",
+    "name": "get_current_weather",
+    "id": "166ac695-8cfe-4f9b-80d3-767f8c0e838b",
+    "tool_call_id": "fc_70fab492-9267-4e2f-9d88-47884480cc50",
+    "artifact": null,
+    "status": "success"
+  },
+  {
+    "content": "",
+    "additional_kwargs": {
+      "reasoning_content": "We need to answer: weather in Tokyo right now, number of words in sentence 'Artificial Intelligence is awesome', and give me the time. We have weather: 18°C, Light Rain. Need word count: sentence has 4 words? Let's count: \"Artificial\" (1), \"Intelligence\" (2), \"is\" (3), \"awesome\" (4). So 4 words. Need current time. Use get_time.",
+      "tool_calls": [
+        {
+          "id": "fc_f8ae465e-8f24-49a4-84e8-decbe41579cb",
+          "function": {
+            "arguments": "{}",
+            "name": "get_time"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    "response_metadata": {
+      "token_usage": {
+        "completion_tokens": 110,
+        "prompt_tokens": 276,
+        "total_tokens": 386,
+        "completion_time": 0.112455359,
+        "completion_tokens_details": {
+          "reasoning_tokens": 91
+        },
+        "prompt_time": 0.019824669,
+        "prompt_tokens_details": null,
+        "queue_time": 0.075038744,
+        "total_time": 0.132280028
+      },
+      "model_name": "openai/gpt-oss-20b",
+      "system_fingerprint": "fp_e11c8bbf69",
+      "service_tier": "on_demand",
+      "finish_reason": "tool_calls",
+      "logprobs": null,
+      "model_provider": "groq"
+    },
+    "type": "AIMessage",
+    "name": null,
+    "id": "lc_run--01a20eea-f69c-7132-b189-cb69b06c51a3-0",
+    "tool_calls": [
+      {
+        "name": "get_time",
+        "args": {},
+        "id": "fc_f8ae465e-8f24-49a4-84e8-decbe41579cb",
+        "type": "tool_call"
+      }
+    ],
+    "invalid_tool_calls": [],
+    "usage_metadata": {
+      "input_tokens": 276,
+      "output_tokens": 110,
+      "total_tokens": 386,
+      "output_token_details": {
+        "reasoning": 91
+      }
+    }
+  },
+  {
+    "content": "Current time: 2026-11-24 12:56:49",
+    "additional_kwargs": {},
+    "response_metadata": {},
+    "type": "ToolMessage",
+    "name": "get_time",
+    "id": "01aba12a-ce3b-4967-93f6-797b2aa40c41",
+    "tool_call_id": "fc_f8ae465e-8f24-49a4-84e8-decbe41579cb",
+    "artifact": null,
+    "status": "success"
+  },
+  {
+    "content": "- **Weather in Tokyo (now):** 18 °C, Light Rain  \n- **Word count of “Artificial Intelligence is awesome”:** 4 words  \n- **Current time:** 2026‑11‑24 12:56:49",
+    "additional_kwargs": {
+      "reasoning_content": "We need to answer: weather in Tokyo, word count of sentence, and give time. We have weather: 18°C, Light Rain. Word count: \"Artificial Intelligence is awesome\" has 4 words? Let's count: Artificial(1) Intelligence(2) is(3) awesome(4). So 4 words. Time: 2026-11-24 12:56:49. Provide answer."
+    },
+    "response_metadata": {
+      "token_usage": {
+        "completion_tokens": 147,
+        "prompt_tokens": 312,
+        "total_tokens": 459,
+        "completion_time": 0.157140983,
+        "completion_tokens_details": {
+          "reasoning_tokens": 87
+        },
+        "prompt_time": 0.017683707,
+        "prompt_tokens_details": null,
+        "queue_time": 0.002916447,
+        "total_time": 0.17482469
+      },
+      "model_name": "openai/gpt-oss-20b",
+      "system_fingerprint": "fp_3023a70d60",
+      "service_tier": "on_demand",
+      "finish_reason": "stop",
+      "logprobs": null,
+      "model_provider": "groq"
+    },
+    "type": "AIMessage",
+    "name": null,
+    "id": "lc_run--01a20eea-f833-7fb2-8efe-09e99b6283f5-0",
+    "tool_calls": [],
+    "invalid_tool_calls": [],
+    "usage_metadata": {
+      "input_tokens": 312,
+      "output_tokens": 147,
+      "total_tokens": 459,
+      "output_token_details": {
+        "reasoning": 87
+      }
+    }
+  }
+]

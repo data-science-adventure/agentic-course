@@ -14,6 +14,7 @@ from langchain_core.tools import tool
 from langchain_groq import ChatGroq
 from rich.console import Console
 from rich.panel import Panel
+from agentic_course.utils.save_message_to_json import save_messages_to_json
 
 load_dotenv()
 console = Console()
@@ -90,6 +91,7 @@ def main():
 
     # Extract final text output from state messages history
     final_output = response["messages"][-1].content
+    save_messages_to_json(response["messages"])
 
     console.print("[bold green]--- Agent Final Output ---[/bold green]")
     console.print(f"[bright_white]{final_output.strip()}[/bright_white]")
