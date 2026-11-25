@@ -5,13 +5,19 @@ description = "Hands-on course on building agents with LangChain and LangGraph"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "accelerate>=1.16.0",
     "langchain>=1.3.16",
     "langchain-core>=1.6.0",
     "langchain-groq>=1.1.3",
     "langchain-huggingface>=1.2.2",
+    "langchain-ollama>=1.2.0",
+    "langchain-openai>=1.8.5",
+    "langchain-pinecone==0.2.13",
     "langgraph>=0.2.0",
+    "pinecone>=6.0.0,<8.0.0",
     "python-dotenv>=1.2.3",
     "rich>=15.0.0",
+    "sentence-transformers>=6.3.0",
     "torch>=2.13.0",
     "transformers>=5.15.1",
 ]
@@ -26,3 +32,4 @@ run-main = "agentic_course.main:main"
 m1-intro = "agentic_course.module_01_basics.llm_intro:main"
 m2-tools = "agentic_course.module_02_tools.simple_tools:main"
 m2-multi-tool = "agentic_course.module_02_tools.multi_tool_agent:main"
+m3-shopping-graph = "agentic_course.module_03_langgraph.shopping_state_graph:main"

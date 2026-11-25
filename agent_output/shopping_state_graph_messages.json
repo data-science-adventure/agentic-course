@@ -1,0 +1,54 @@
+[
+  {
+    "content": "What is the price of a laptop after applying a gold discount?",
+    "additional_kwargs": {},
+    "response_metadata": {},
+    "type": "HumanMessage",
+    "name": null,
+    "id": "726e1955-d022-4fff-a647-2c513b9aea42"
+  },
+  {
+    "content": "[extract_intent] product='laptop', discount_tier='gold'",
+    "additional_kwargs": {},
+    "response_metadata": {},
+    "type": "AIMessage",
+    "name": null,
+    "id": "8cdd63c3-802b-40dc-a225-15b7974d06fd",
+    "tool_calls": [],
+    "invalid_tool_calls": [],
+    "usage_metadata": null
+  },
+  {
+    "content": "[lookup_price] laptop -> $1299.99",
+    "additional_kwargs": {},
+    "response_metadata": {},
+    "type": "AIMessage",
+    "name": null,
+    "id": "fa2de488-522d-40bd-aaaa-c4552af34f59",
+    "tool_calls": [],
+    "invalid_tool_calls": [],
+    "usage_metadata": null
+  },
+  {
+    "content": "[apply_discount] $1299.99 (gold) -> $1000.99",
+    "additional_kwargs": {},
+    "response_metadata": {},
+    "type": "AIMessage",
+    "name": null,
+    "id": "c0006666-1b26-40d1-bf57-4900f189847a",
+    "tool_calls": [],
+    "invalid_tool_calls": [],
+    "usage_metadata": null
+  },
+  {
+    "content": "The laptop costs $1299.99. With the gold discount applied, the final price is $1000.99.",
+    "additional_kwargs": {},
+    "response_metadata": {},
+    "type": "AIMessage",
+    "name": null,
+    "id": "3992d5f9-090a-4dfd-9b9a-d755e06d7361",
+    "tool_calls": [],
+    "invalid_tool_calls": [],
+    "usage_metadata": null
+  }
+]
