@@ -31,8 +31,11 @@ build-backend = "setuptools.build_meta"
 
 # Register CLI entrypoints for students to run via `uv run`
 [project.scripts]
-run-main = "agentic_course.main:main"
+show-modules = "agentic_course.main:main"
 m1-intro = "agentic_course.module_01_basics.llm_intro:main"
 m2-tools = "agentic_course.module_02_tools.simple_tools:main"
 m2-multi-tool = "agentic_course.module_02_tools.multi_tool_agent:main"
-m3-shopping-graph = "agentic_course.module_03_langgraph.shopping_state_graph:main"
+m3-shopping = "agentic_course.module_03_langgraph.shopping_state_graph:main"
+m4-create-index = "agentic_course.module_04_rag.create_pinecone_index:main"
+m4-load-pdf = "agentic_course.module_04_rag.load_rag_pdf:main"
+m4-query-to-pdf = "agentic_course.module_04_rag.query_rag_pdf:main"

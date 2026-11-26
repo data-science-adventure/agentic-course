@@ -10,6 +10,7 @@ load_dotenv()
 
 EMBEDDING_DIMENSION = 384  # Matches sentence-transformers/all-MiniLM-L6-v2
 
+
 def ensure_pinecone_index(
     pc: Pinecone,
     index_name: str,
@@ -49,7 +50,7 @@ def get_vector_store(index_name: str, embeddings: Embeddings) -> PineconeVectorS
     return PineconeVectorStore(index=pc.Index(index_name), embedding=embeddings)
 
 
-if __name__ == "__main__":
+def main():
     pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
     index_name = os.environ["INDEX_NAME"]
     reset_index = os.getenv("RESET_INDEX", "false").strip().lower() == "true"
@@ -61,3 +62,7 @@ if __name__ == "__main__":
         metric="cosine",
         reset=reset_index,
     )
+
+
+if __name__ == "__main__":
+    main()

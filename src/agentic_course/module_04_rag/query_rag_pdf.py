@@ -22,7 +22,9 @@ def query_rag_document(
     """Retrieve relevant PDF chunks from Pinecone and answer via ChatGroq."""
     target_index = index_name or os.environ["INDEX_NAME"]
     target_namespace = (
-        namespace if namespace is not None else (os.getenv("PINECONE_NAMESPACE") or None)
+        namespace
+        if namespace is not None
+        else (os.getenv("PINECONE_NAMESPACE") or None)
     )
 
     pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
@@ -61,7 +63,7 @@ def query_rag_document(
     return str(response.content)
 
 
-if __name__ == "__main__":
+def main():
     sample_question = (
         "What is the vocabulary mismatch problem in sparse retrieval, and how does "
         "dense retrieval or a bi-encoder help address it?"
@@ -69,3 +71,7 @@ if __name__ == "__main__":
     print(f"Question: {sample_question}\n")
     answer = query_rag_document(question=sample_question, k=4)
     print(f"Answer:\n{answer}")
+
+
+if __name__ == "__main__":
+    main()

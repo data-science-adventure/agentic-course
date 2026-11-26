@@ -49,7 +49,11 @@ def ingest_pdf_to_pinecone(
 ) -> None:
     """Upsert all split PDF chunks into the target Pinecone index."""
     target_index = index_name or os.environ["INDEX_NAME"]
-    target_namespace = namespace if namespace is not None else (os.getenv("PINECONE_NAMESPACE") or None)
+    target_namespace = (
+        namespace
+        if namespace is not None
+        else (os.getenv("PINECONE_NAMESPACE") or None)
+    )
 
     chunks = load_and_split_pdf(pdf_path)
 
@@ -76,6 +80,10 @@ def ingest_pdf_to_pinecone(
     )
 
 
-if __name__ == "__main__":
+def main():
     pdf_file = os.getenv("RAG_PDF_PATH", DEFAULT_PDF_PATH)
     ingest_pdf_to_pinecone(pdf_path=pdf_file)
+
+
+if __name__ == "__main__":
+    main()

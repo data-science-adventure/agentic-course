@@ -1,5 +1,5 @@
 {
-    "_workbench.colorTheme": "Quiet Light",
+    "workbench.colorTheme": "Quiet Light",
     "files.exclude": {
         "nlp_flow.egg-info/": true,
         "**/__pycache__": true,
