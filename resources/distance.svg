@@ -1,0 +1,237 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1380 820" width="1380" height="820" font-family="Inter, -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, sans-serif">
+  <defs>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.06" />
+    </filter>
+
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="100%" stop-color="#f1f5f9" />
+    </linearGradient>
+
+    
+    <marker id="arrBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#2563eb" />
+    </marker>
+    <marker id="arrPurple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#7c3aed" />
+    </marker>
+    <marker id="arrTeal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#059669" />
+    </marker>
+    <marker id="arrGray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#64748b" />
+    </marker>
+  </defs>
+
+  
+  <rect width="1380" height="820" fill="url(#bg)" />
+
+  
+  <text x="36" y="46" font-size="24" font-weight="800" fill="#0f172a">Vector Similarity Metrics in Retrieval-Augmented Generation (RAG)</text>
+  <text x="36" y="70" font-size="14" font-weight="500" fill="#475569">Comparing Query Vector (q) and Document Chunk Vector (d) in Pinecone • Module 04</text>
+  <rect x="1114" y="28" width="230" height="36" rx="18" fill="#0f172a" />
+  <text x="1229" y="51" text-anchor="middle" font-size="12.5" font-weight="700" fill="#f8fafc">Pinecone Index: metric="cosine"</text>
+
+  
+  
+  
+  <g filter="url(#shadow)">
+    <rect x="32" y="96" width="424" height="568" rx="16" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5" />
+    <path d="M 48 96 H 440 A 16 16 0 0 1 456 112 V 154 H 32 V 112 A 16 16 0 0 1 48 96 Z" fill="#eff6ff" />
+    <circle cx="62" cy="125" r="14" fill="#1d4ed8" />
+    <text x="62" y="130" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">1</text>
+    <text x="86" y="123" font-size="16" font-weight="700" fill="#1e3a8a">Euclidean Distance (L2)</text>
+    <text x="86" y="141" font-size="11.5" fill="#2563eb" font-weight="600">Straight-Line Gap Between Vector Tips</text>
+  </g>
+
+  
+  <rect x="52" y="170" width="384" height="260" rx="12" fill="#f8fafc" stroke="#e2e8f0" />
+  
+  <g stroke="#e2e8f0" stroke-width="1">
+    <line x1="92" y1="215" x2="405" y2="215" />
+    <line x1="92" y1="265" x2="405" y2="265" />
+    <line x1="92" y1="315" x2="405" y2="315" />
+    <line x1="92" y1="365" x2="405" y2="365" />
+    <line x1="142" y1="190" x2="142" y2="395" />
+    <line x1="192" y1="190" x2="192" y2="395" />
+    <line x1="242" y1="190" x2="242" y2="395" />
+    <line x1="292" y1="190" x2="292" y2="395" />
+    <line x1="342" y1="190" x2="342" y2="395" />
+  </g>
+  
+  <line x1="92" y1="395" x2="412" y2="395" stroke="#94a3b8" stroke-width="1.8" marker-end="url(#arrGray)" />
+  <line x1="92" y1="395" x2="92" y2="185" stroke="#94a3b8" stroke-width="1.8" marker-end="url(#arrGray)" />
+  <text x="404" y="413" font-size="11" fill="#64748b" font-weight="600">dim 1</text>
+  <text x="64" y="196" font-size="11" fill="#64748b" font-weight="600">dim 2</text>
+  <text x="76" y="410" font-size="11" fill="#64748b">(0,0)</text>
+
+  
+  
+  <line x1="92" y1="395" x2="208" y2="245" stroke="#2563eb" stroke-width="3" marker-end="url(#arrBlue)" />
+  <circle cx="212" cy="240" r="4.5" fill="#2563eb" />
+  <text x="158" y="234" font-size="12.5" font-weight="700" fill="#1d4ed8">Query (q)</text>
+
+  
+  <line x1="92" y1="395" x2="350" y2="317" stroke="#0f172a" stroke-width="3" marker-end="url(#arrGray)" />
+  <circle cx="356" cy="315" r="4.5" fill="#0f172a" />
+  <text x="315" y="344" font-size="12.5" font-weight="700" fill="#0f172a">Doc (d)</text>
+
+  
+  <line x1="212" y1="240" x2="356" y2="315" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="6,4" />
+  <rect x="242" y="250" width="114" height="24" rx="6" fill="#fef2f2" stroke="#fca5a5" />
+  <text x="299" y="266" text-anchor="middle" font-size="11" font-weight="700" fill="#b91c1c">Distance ||q - d||</text>
+
+  
+  <rect x="52" y="444" width="384" height="62" rx="10" fill="#eff6ff" stroke="#bfdbfe" />
+  <text x="244" y="468" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1e3a8a">D(q, d) = √( Σ (qᵢ - dᵢ)² )</text>
+  <text x="244" y="491" text-anchor="middle" font-size="11.5" fill="#2563eb">Range: [0, ∞)  •  Smaller value = Closer match</text>
+
+  <text x="56" y="532" font-size="12.5" font-weight="700" fill="#0f172a">How It Behaves:</text>
+  <text x="56" y="553" font-size="12" fill="#334155">• Measures absolute coordinate difference in space.</text>
+  <text x="56" y="574" font-size="12" fill="#334155">• Sensitive to vector length (magnitude).</text>
+  <text x="56" y="595" font-size="12" fill="#334155">• A long paragraph and a short sentence on the</text>
+  <text x="66" y="612" font-size="12" fill="#334155">same topic can still have a large L2 distance.</text>
+  <rect x="52" y="624" width="384" height="26" rx="6" fill="#f1f5f9" />
+  <text x="244" y="641" text-anchor="middle" font-size="11" font-family="monospace" fill="#475569">Pinecone: metric="euclidean"</text>
+
+  
+  
+  
+  <g filter="url(#shadow)">
+    <rect x="478" y="96" width="424" height="568" rx="16" fill="#ffffff" stroke="#c4b5fd" stroke-width="1.5" />
+    <path d="M 494 96 H 886 A 16 16 0 0 1 902 112 V 154 H 478 V 112 A 16 16 0 0 1 494 96 Z" fill="#f5f3ff" />
+    <circle cx="508" cy="125" r="14" fill="#6d28d9" />
+    <text x="508" y="130" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">2</text>
+    <text x="532" y="123" font-size="16" font-weight="700" fill="#4c1d95">Dot Product Similarity</text>
+    <text x="532" y="141" font-size="11.5" fill="#6d28d9" font-weight="600">Directional Alignment × Vector Magnitudes</text>
+  </g>
+
+  
+  <rect x="498" y="170" width="384" height="260" rx="12" fill="#f8fafc" stroke="#e2e8f0" />
+  
+  <g stroke="#e2e8f0" stroke-width="1">
+    <line x1="538" y1="215" x2="851" y2="215" />
+    <line x1="538" y1="265" x2="851" y2="265" />
+    <line x1="538" y1="315" x2="851" y2="315" />
+    <line x1="538" y1="365" x2="851" y2="365" />
+    <line x1="588" y1="190" x2="588" y2="395" />
+    <line x1="638" y1="190" x2="638" y2="395" />
+    <line x1="688" y1="190" x2="688" y2="395" />
+    <line x1="738" y1="190" x2="738" y2="395" />
+    <line x1="788" y1="190" x2="788" y2="395" />
+  </g>
+  
+  <line x1="538" y1="395" x2="858" y2="395" stroke="#94a3b8" stroke-width="1.8" marker-end="url(#arrGray)" />
+  <line x1="538" y1="395" x2="538" y2="185" stroke="#94a3b8" stroke-width="1.8" marker-end="url(#arrGray)" />
+  <text x="850" y="413" font-size="11" fill="#64748b" font-weight="600">dim 1</text>
+  <text x="510" y="196" font-size="11" fill="#64748b" font-weight="600">dim 2</text>
+  <text x="522" y="410" font-size="11" fill="#64748b">(0,0)</text>
+
+  
+  <line x1="538" y1="395" x2="822" y2="309" stroke="#0f172a" stroke-width="3" marker-end="url(#arrGray)" />
+  <text x="795" y="334" font-size="12.5" font-weight="700" fill="#0f172a">Doc (d)</text>
+
+  
+  <line x1="538" y1="395" x2="682" y2="229" stroke="#7c3aed" stroke-width="3" marker-end="url(#arrPurple)" />
+  <text x="615" y="224" font-size="12.5" font-weight="700" fill="#5b21b6">Query (q)</text>
+
+  
+  <line x1="686" y1="224" x2="726" y2="338" stroke="#7c3aed" stroke-width="2" stroke-dasharray="5,4" />
+  
+  <line x1="538" y1="395" x2="726" y2="338" stroke="#a855f7" stroke-width="5" opacity="0.45" />
+  <circle cx="726" cy="338" r="4" fill="#6d28d9" />
+  <rect x="572" y="356" width="144" height="22" rx="5" fill="#f3e8ff" stroke="#d8b4fe" />
+  <text x="644" y="371" text-anchor="middle" font-size="10.5" font-weight="700" fill="#5b21b6">Projection ||q|| cos(θ)</text>
+
+  
+  <rect x="498" y="444" width="384" height="62" rx="10" fill="#f5f3ff" stroke="#ddd6fe" />
+  <text x="690" y="468" text-anchor="middle" font-size="13.5" font-weight="700" fill="#4c1d95">q · d = Σ (qᵢ × dᵢ) = ||q|| ||d|| cos(θ)</text>
+  <text x="690" y="491" text-anchor="middle" font-size="11.5" fill="#6d28d9">Range: (-∞, ∞)  •  Higher value = Stronger match</text>
+
+  <text x="502" y="532" font-size="12.5" font-weight="700" fill="#0f172a">How It Behaves:</text>
+  <text x="502" y="553" font-size="12" fill="#334155">• Combines angle alignment AND vector length.</text>
+  <text x="502" y="574" font-size="12" fill="#334155">• Larger magnitudes boost the final score.</text>
+  <text x="502" y="595" font-size="12" fill="#334155">• When ||q|| = 1 and ||d|| = 1 (unit-normalized),</text>
+  <text x="512" y="612" font-size="12" fill="#334155">Dot Product becomes identical to Cosine Similarity.</text>
+  <rect x="498" y="624" width="384" height="26" rx="6" fill="#f1f5f9" />
+  <text x="690" y="641" text-anchor="middle" font-size="11" font-family="monospace" fill="#475569">Pinecone: metric="dotproduct"</text>
+
+  
+  
+  
+  <g filter="url(#shadow)">
+    <rect x="924" y="96" width="424" height="568" rx="16" fill="#ffffff" stroke="#6ee7b7" stroke-width="2" />
+    <path d="M 940 96 H 1332 A 16 16 0 0 1 1348 112 V 154 H 924 V 112 A 16 16 0 0 1 940 96 Z" fill="#ecfdf5" />
+    <circle cx="954" cy="125" r="14" fill="#047857" />
+    <text x="954" y="130" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">3</text>
+    <text x="978" y="123" font-size="16" font-weight="700" fill="#064e3b">Cosine Similarity (RAG Default)</text>
+    <text x="978" y="141" font-size="11.5" fill="#047857" font-weight="600">Pure Semantic Angle θ (Magnitude-Invariant)</text>
+  </g>
+
+  
+  <rect x="944" y="170" width="384" height="260" rx="12" fill="#f8fafc" stroke="#e2e8f0" />
+  
+  <g stroke="#e2e8f0" stroke-width="1">
+    <line x1="984" y1="215" x2="1297" y2="215" />
+    <line x1="984" y1="265" x2="1297" y2="265" />
+    <line x1="984" y1="315" x2="1297" y2="315" />
+    <line x1="984" y1="365" x2="1297" y2="365" />
+    <line x1="1034" y1="190" x2="1034" y2="395" />
+    <line x1="1084" y1="190" x2="1084" y2="395" />
+    <line x1="1134" y1="190" x2="1134" y2="395" />
+    <line x1="1184" y1="190" x2="1184" y2="395" />
+    <line x1="1234" y1="190" x2="1234" y2="395" />
+  </g>
+  
+  <path d="M 984 260 A 135 135 0 0 1 1119 395" fill="none" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4,4" />
+  <text x="1062" y="254" font-size="10" font-weight="600" fill="#059669">Unit Circle (||v||=1)</text>
+
+  
+  <line x1="984" y1="395" x2="1304" y2="395" stroke="#94a3b8" stroke-width="1.8" marker-end="url(#arrGray)" />
+  <line x1="984" y1="395" x2="984" y2="185" stroke="#94a3b8" stroke-width="1.8" marker-end="url(#arrGray)" />
+  <text x="1296" y="413" font-size="11" fill="#64748b" font-weight="600">dim 1</text>
+  <text x="956" y="196" font-size="11" fill="#64748b" font-weight="600">dim 2</text>
+  <text x="968" y="410" font-size="11" fill="#64748b">(0,0)</text>
+
+  
+  <line x1="984" y1="395" x2="1102" y2="276" stroke="#059669" stroke-width="3" marker-end="url(#arrTeal)" />
+  <text x="1032" y="280" font-size="12.5" font-weight="700" fill="#047857">Query (q)</text>
+
+  
+  <line x1="984" y1="395" x2="1268" y2="262" stroke="#0f172a" stroke-width="3" marker-end="url(#arrGray)" />
+  <text x="1216" y="252" font-size="12.5" font-weight="700" fill="#0f172a">Doc (d)</text>
+
+  
+  <path d="M 1038 341 A 76 76 0 0 1 1053 362" fill="none" stroke="#059669" stroke-width="2.5" />
+  <rect x="1058" y="334" width="66" height="22" rx="5" fill="#d1fae5" stroke="#6ee7b7" />
+  <text x="1091" y="349" text-anchor="middle" font-size="11" font-weight="800" fill="#065f46">Angle θ</text>
+
+  
+  <rect x="944" y="444" width="384" height="62" rx="10" fill="#ecfdf5" stroke="#a7f3d0" />
+  <text x="1136" y="468" text-anchor="middle" font-size="13.5" font-weight="700" fill="#064e3b">cos(θ) = (q · d) / (||q|| × ||d||)</text>
+  <text x="1136" y="491" text-anchor="middle" font-size="11.5" fill="#047857">Range: [-1, 1]  •  1.0 = Identical direction</text>
+
+  <text x="948" y="532" font-size="12.5" font-weight="700" fill="#0f172a">Why We Use It in Module 04:</text>
+  <text x="948" y="553" font-size="12" fill="#334155">• Divides by ||q|| and ||d|| to normalize length.</text>
+  <text x="948" y="574" font-size="12" fill="#334155">• Short user questions match long 1,000-char</text>
+  <text x="958" y="591" font-size="12" fill="#334155">PDF chunks purely on semantic meaning.</text>
+  <text x="948" y="612" font-size="12" fill="#334155">• Ideal for all-MiniLM-L6-v2 (384 dims).</text>
+  <rect x="944" y="624" width="384" height="26" rx="6" fill="#d1fae5" />
+  <text x="1136" y="641" text-anchor="middle" font-size="11" font-family="monospace" font-weight="700" fill="#065f46">Pinecone: metric="cosine" (Active)</text>
+
+  
+  
+  
+  <g filter="url(#shadow)">
+    <rect x="32" y="684" width="1316" height="112" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" />
+    <rect x="52" y="704" width="214" height="32" rx="8" fill="#0f172a" />
+    <text x="159" y="725" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">Engineering Rule of Thumb</text>
+
+    <text x="284" y="725" font-size="13" font-weight="700" fill="#0f172a">Quick Intuition: Same Topic, Different Text Length</text>
+    <text x="52" y="756" font-size="12" fill="#334155">Suppose q = [1, 1] (short query) and d = [10, 10] (long PDF chunk pointing in the exact same semantic direction):</text>
+    <text x="52" y="778" font-size="12" font-weight="700" fill="#1d4ed8">• Euclidean Distance = 12.73 (looks far away!)</text>
+    <text x="430" y="778" font-size="12" font-weight="700" fill="#6d28d9">• Dot Product = 20.0 (scales with length)</text>
+    <text x="795" y="778" font-size="12" font-weight="700" fill="#047857">• Cosine Similarity = 1.00 (exact semantic match!)</text>
+  </g>
+</svg>

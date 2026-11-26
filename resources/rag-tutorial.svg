@@ -1,0 +1,360 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 980" width="1400" height="980" font-family="Inter, -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, sans-serif">
+  <defs>
+    
+    <filter id="cardShadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.06" />
+    </filter>
+
+    
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="100%" stop-color="#f1f5f9" />
+    </linearGradient>
+
+    <linearGradient id="blueHeader" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#eff6ff" />
+      <stop offset="100%" stop-color="#dbeafe" />
+    </linearGradient>
+
+    <linearGradient id="purpleHeader" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f5f3ff" />
+      <stop offset="100%" stop-color="#ede9fe" />
+    </linearGradient>
+
+    <linearGradient id="tealHeader" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ecfdf5" />
+      <stop offset="100%" stop-color="#d1fae5" />
+    </linearGradient>
+
+    
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#475569" />
+    </marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#2563eb" />
+    </marker>
+  </defs>
+
+  
+  <rect width="1400" height="980" fill="url(#bgGrad)" />
+
+  
+  <text x="36" y="44" font-size="24" font-weight="800" fill="#0f172a">Module 04: End-to-End RAG Architecture with Pinecone, Hugging Face &amp; ChatGroq</text>
+  <text x="36" y="68" font-size="14" font-weight="500" fill="#475569">agentic-course/src/agentic_course/module_04_rag • 384-Dimensional Dense Vector Pipeline</text>
+  <rect x="1150" y="26" width="214" height="36" rx="18" fill="#0f172a" />
+  <text x="1257" y="49" text-anchor="middle" font-size="12.5" font-weight="700" fill="#f8fafc">LangChain Component Layer</text>
+
+  
+  
+  
+  <g filter="url(#cardShadow)">
+    <rect x="28" y="92" width="435" height="302" rx="16" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5" />
+    <path d="M 44 92 H 447 A 16 16 0 0 1 463 108 V 142 H 28 V 108 A 16 16 0 0 1 44 92 Z" fill="url(#blueHeader)" />
+    <circle cx="54" cy="117" r="14" fill="#1d4ed8" />
+    <text x="54" y="122" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">1</text>
+    <text x="78" y="115" font-size="15" font-weight="700" fill="#1e3a8a">Provision Serverless Index</text>
+    <text x="78" y="132" font-size="11.5" font-family="monospace" fill="#2563eb">uv run m4-create-index</text>
+  </g>
+
+  
+  <rect x="44" y="158" width="248" height="218" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" />
+  <text x="60" y="182" font-size="13" font-weight="700" fill="#0f172a">create_pinecone_index.py</text>
+  <text x="60" y="201" font-size="11.5" fill="#475569">Pinecone SDK + ServerlessSpec</text>
+  <line x1="60" y1="212" x2="276" y2="212" stroke="#e2e8f0" stroke-width="1" />
+  <text x="60" y="233" font-size="11.5" font-family="monospace" fill="#1e293b">• name: "agentic-course"</text>
+  <text x="60" y="255" font-size="11.5" font-family="monospace" fill="#1d4ed8" font-weight="700">• dimension: 384</text>
+  <text x="60" y="277" font-size="11.5" font-family="monospace" fill="#1e293b">• metric: "cosine"</text>
+  <text x="60" y="299" font-size="11.5" font-family="monospace" fill="#1e293b">• cloud: "aws" / us-east-1</text>
+  <rect x="60" y="320" width="216" height="40" rx="8" fill="#eff6ff" stroke="#bfdbfe" />
+  <text x="168" y="337" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af">Schema Lockstep Rule</text>
+  <text x="168" y="352" text-anchor="middle" font-size="10.5" fill="#3b82f6">Must match MiniLM-L6-v2 (384d)</text>
+
+  
+  <rect x="308" y="158" width="138" height="218" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" />
+  <g transform="translate(377, 224)">
+    <path d="M -28 -16 V 18 C -28 26, 28 26, 28 18 V -16 Z" fill="#1d4ed8" />
+    <ellipse cx="0" cy="-16" rx="28" ry="9" fill="#3b82f6" />
+    <path d="M -28 1 C -28 9, 28 9, 28 1" fill="none" stroke="#93c5fd" stroke-width="1.5" />
+  </g>
+  <text x="377" y="274" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Pinecone Index</text>
+  <text x="377" y="291" text-anchor="middle" font-size="11" fill="#475569">Dense Vector DB</text>
+  <rect x="322" y="310" width="110" height="26" rx="13" fill="#dbeafe" stroke="#93c5fd" />
+  <text x="377" y="327" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af">dim = 384</text>
+  <text x="377" y="357" text-anchor="middle" font-size="10.5" fill="#16a34a" font-weight="600">● status: ready</text>
+
+  
+  <line x1="463" y1="245" x2="483" y2="245" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrowBlue)" />
+
+  
+  
+  
+  <g filter="url(#cardShadow)">
+    <rect x="488" y="92" width="884" height="302" rx="16" fill="#ffffff" stroke="#c4b5fd" stroke-width="1.5" />
+    <path d="M 504 92 H 1356 A 16 16 0 0 1 1372 108 V 142 H 488 V 108 A 16 16 0 0 1 504 92 Z" fill="url(#purpleHeader)" />
+    <circle cx="514" cy="117" r="14" fill="#6d28d9" />
+    <text x="514" y="122" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">2</text>
+    <text x="538" y="115" font-size="15" font-weight="700" fill="#4c1d95">Load, Split &amp; Upsert Full PDF Document</text>
+    <text x="538" y="132" font-size="11.5" font-family="monospace" fill="#6d28d9">uv run m4-load-pdf  →  src/agentic_course/module_04_rag/load_rag_pdf.py</text>
+  </g>
+
+  
+  <rect x="504" y="158" width="144" height="218" rx="12" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.2" />
+  <g transform="translate(576, 206)">
+    <path d="M -18 -24 H 6 L 18 -12 V 24 H -18 Z" fill="#ffffff" stroke="#6d28d9" stroke-width="2" />
+    <path d="M 6 -24 V -12 H 18" fill="none" stroke="#6d28d9" stroke-width="2" />
+    <text x="0" y="9" text-anchor="middle" font-size="9.5" font-weight="800" fill="#6d28d9">PDF</text>
+  </g>
+  <text x="576" y="252" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">PyPDFLoader</text>
+  <text x="576" y="270" text-anchor="middle" font-size="11" fill="#5b21b6" font-weight="600">rag.pdf (25 pages)</text>
+  <text x="576" y="294" text-anchor="middle" font-size="10.5" fill="#475569">Extracts text +</text>
+  <text x="576" y="309" text-anchor="middle" font-size="10.5" fill="#475569">page metadata</text>
+  <rect x="520" y="330" width="112" height="26" rx="6" fill="#ede9fe" />
+  <text x="576" y="347" text-anchor="middle" font-size="10.5" font-family="monospace" fill="#5b21b6">list[Document]</text>
+
+  <line x1="648" y1="267" x2="668" y2="267" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+
+  
+  <rect x="674" y="158" width="154" height="218" rx="12" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.2" />
+  <g transform="translate(751, 184)">
+    <rect x="-34" y="0" width="68" height="11" rx="3" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.2" />
+    <rect x="-34" y="15" width="68" height="11" rx="3" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.2" />
+    <rect x="-34" y="30" width="68" height="11" rx="3" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.2" />
+    <rect x="-34" y="45" width="68" height="11" rx="3" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.2" />
+  </g>
+  <text x="751" y="258" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">RecursiveCharacter</text>
+  <text x="751" y="273" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">TextSplitter</text>
+  <text x="751" y="297" text-anchor="middle" font-size="10.5" font-family="monospace" fill="#475569">chunk_size=1000</text>
+  <text x="751" y="313" text-anchor="middle" font-size="10.5" font-family="monospace" fill="#475569">overlap=150</text>
+  <rect x="690" y="330" width="122" height="26" rx="6" fill="#ede9fe" />
+  <text x="751" y="347" text-anchor="middle" font-size="10.5" font-family="monospace" fill="#5b21b6">Overlapping Chunks</text>
+
+  <line x1="828" y1="267" x2="848" y2="267" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+
+  
+  <rect x="854" y="158" width="166" height="218" rx="12" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.2" />
+  <g transform="translate(937, 206)" stroke="#6d28d9" stroke-width="1.8" fill="#ede9fe">
+    <line x1="-26" y1="-12" x2="0" y2="-16" />
+    <line x1="-26" y1="-12" x2="0" y2="12" />
+    <line x1="-22" y1="14" x2="0" y2="-16" />
+    <line x1="-22" y1="14" x2="0" y2="12" />
+    <line x1="0" y1="-16" x2="26" y2="-4" />
+    <line x1="0" y1="12" x2="26" y2="-4" />
+    <circle cx="-26" cy="-12" r="4.5" />
+    <circle cx="-22" cy="14" r="4.5" />
+    <circle cx="0" cy="-16" r="4.5" />
+    <circle cx="0" cy="12" r="4.5" />
+    <circle cx="26" cy="-4" r="4.5" />
+  </g>
+  <text x="937" y="252" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">HuggingFace</text>
+  <text x="937" y="268" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Embeddings</text>
+  <text x="937" y="292" text-anchor="middle" font-size="10.5" font-family="monospace" fill="#5b21b6">all-MiniLM-L6-v2</text>
+  <text x="937" y="310" text-anchor="middle" font-size="10.5" fill="#475569">Local dense encoder</text>
+  <rect x="872" y="330" width="130" height="26" rx="6" fill="#ede9fe" />
+  <text x="937" y="347" text-anchor="middle" font-size="10.5" font-weight="700" fill="#5b21b6">float[384] vectors</text>
+
+  <line x1="1020" y1="267" x2="1040" y2="267" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+
+  
+  <rect x="1046" y="158" width="150" height="218" rx="12" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1.2" />
+  <g transform="translate(1121, 206)">
+    <path d="M -24 -12 V 14 C -24 21, 24 21, 24 14 V -12 Z" fill="#6d28d9" />
+    <ellipse cx="0" cy="-12" rx="24" ry="8" fill="#8b5cf6" />
+  </g>
+  <text x="1121" y="252" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">PineconeVectorStore</text>
+  <text x="1121" y="270" text-anchor="middle" font-size="11" font-family="monospace" fill="#5b21b6">.add_documents()</text>
+  <text x="1121" y="294" text-anchor="middle" font-size="10.5" fill="#475569">Batch upsert (100)</text>
+  <text x="1121" y="309" text-anchor="middle" font-size="10.5" fill="#475569">Vectors + Metadata</text>
+  <rect x="1062" y="330" width="118" height="26" rx="13" fill="#ede9fe" stroke="#c4b5fd" />
+  <text x="1121" y="347" text-anchor="middle" font-size="10.5" font-weight="700" fill="#5b21b6">agentic-course</text>
+
+  <line x1="1196" y1="267" x2="1216" y2="267" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+
+  
+  <rect x="1222" y="158" width="134" height="218" rx="12" fill="#f8fafc" stroke="#a78bfa" stroke-width="1.4" stroke-dasharray="5,4" />
+  <text x="1289" y="194" text-anchor="middle" font-size="12" font-weight="700" fill="#4c1d95">Index Ready</text>
+  <text x="1289" y="216" text-anchor="middle" font-size="10.5" font-family="monospace" fill="#475569">describe_index</text>
+  <text x="1289" y="230" text-anchor="middle" font-size="10.5" font-family="monospace" fill="#475569">_stats()</text>
+  <rect x="1234" y="252" width="110" height="58" rx="8" fill="#ffffff" stroke="#ddd6fe" />
+  <text x="1289" y="273" text-anchor="middle" font-size="10.5" font-weight="700" fill="#16a34a">vector_count &gt; 0</text>
+  <text x="1289" y="292" text-anchor="middle" font-size="10" fill="#475569">Persisted in cloud</text>
+  <text x="1289" y="342" text-anchor="middle" font-size="10" fill="#64748b">Run once per PDF</text>
+
+  
+  
+  
+  <g filter="url(#cardShadow)">
+    <rect x="28" y="416" width="1344" height="360" rx="16" fill="#ffffff" stroke="#6ee7b7" stroke-width="1.5" />
+    <path d="M 44 416 H 1356 A 16 16 0 0 1 1372 432 V 468 H 28 V 432 A 16 16 0 0 1 44 416 Z" fill="url(#tealHeader)" />
+    <circle cx="54" cy="442" r="14" fill="#047857" />
+    <text x="54" y="447" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">3</text>
+    <text x="78" y="440" font-size="15.5" font-weight="700" fill="#064e3b">Semantic Retrieval &amp; Grounded Answer Generation</text>
+    <text x="78" y="457" font-size="11.5" font-family="monospace" fill="#047857">uv run m4-query-pdf  →  src/agentic_course/module_04_rag/query_rag_pdf.py</text>
+  </g>
+
+  
+  <rect x="44" y="486" width="166" height="270" rx="12" fill="#f0fdf4" stroke="#a7f3d0" stroke-width="1.2" />
+  <circle cx="74" cy="518" r="18" fill="#d1fae5" />
+  <circle cx="74" cy="512" r="6" fill="#047857" />
+  <path d="M 63 529 C 63 521, 85 521, 85 529" fill="#047857" />
+  <text x="100" y="516" font-size="12.5" font-weight="700" fill="#0f172a">User Query</text>
+  <text x="100" y="531" font-size="10.5" fill="#047857" font-weight="600">Runtime Input</text>
+  <rect x="56" y="550" width="142" height="136" rx="8" fill="#ffffff" stroke="#a7f3d0" />
+  <text x="66" y="572" font-size="10.5" fill="#1e293b">"What is the</text>
+  <text x="66" y="588" font-size="10.5" fill="#1e293b">vocabulary mismatch</text>
+  <text x="66" y="604" font-size="10.5" fill="#1e293b">problem in sparse</text>
+  <text x="66" y="620" font-size="10.5" fill="#1e293b">retrieval, and how</text>
+  <text x="66" y="636" font-size="10.5" fill="#1e293b">does dense retrieval</text>
+  <text x="66" y="652" font-size="10.5" fill="#1e293b">or a bi-encoder</text>
+  <text x="66" y="668" font-size="10.5" fill="#1e293b">address it?"</text>
+  <text x="127" y="724" text-anchor="middle" font-size="10.5" font-family="monospace" fill="#065f46">question: str</text>
+
+  <line x1="210" y1="621" x2="230" y2="621" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+
+  
+  <rect x="236" y="486" width="166" height="270" rx="12" fill="#f0fdf4" stroke="#a7f3d0" stroke-width="1.2" />
+  <g transform="translate(319, 546)" stroke="#047857" stroke-width="1.8" fill="#d1fae5">
+    <line x1="-26" y1="-12" x2="0" y2="-16" />
+    <line x1="-26" y1="-12" x2="0" y2="12" />
+    <line x1="-22" y1="14" x2="0" y2="-16" />
+    <line x1="-22" y1="14" x2="0" y2="12" />
+    <line x1="0" y1="-16" x2="26" y2="-4" />
+    <line x1="0" y1="12" x2="26" y2="-4" />
+    <circle cx="-26" cy="-12" r="4.5" />
+    <circle cx="-22" cy="14" r="4.5" />
+    <circle cx="0" cy="-16" r="4.5" />
+    <circle cx="0" cy="12" r="4.5" />
+    <circle cx="26" cy="-4" r="4.5" />
+  </g>
+  <text x="319" y="596" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Query Encoder</text>
+  <text x="319" y="614" text-anchor="middle" font-size="11" fill="#047857" font-weight="600">HuggingFaceEmbeddings</text>
+  <text x="319" y="640" text-anchor="middle" font-size="10.5" font-family="monospace" fill="#334155">all-MiniLM-L6-v2</text>
+  <text x="319" y="660" text-anchor="middle" font-size="10.5" fill="#475569">Same model as Stage 2</text>
+  <rect x="256" y="694" width="126" height="28" rx="6" fill="#d1fae5" />
+  <text x="319" y="712" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">Query Vector [384]</text>
+
+  <line x1="402" y1="621" x2="422" y2="621" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+
+  
+  <rect x="428" y="486" width="174" height="270" rx="12" fill="#f0fdf4" stroke="#a7f3d0" stroke-width="1.2" />
+  <g transform="translate(515, 546)">
+    <path d="M -24 -12 V 14 C -24 21, 24 21, 24 14 V -12 Z" fill="#047857" />
+    <ellipse cx="0" cy="-12" rx="24" ry="8" fill="#10b981" />
+  </g>
+  <text x="515" y="596" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Pinecone Retriever</text>
+  <text x="515" y="614" text-anchor="middle" font-size="10.5" font-family="monospace" fill="#047857">.as_retriever(k=4)</text>
+  <text x="515" y="640" text-anchor="middle" font-size="10.5" fill="#475569">Cosine similarity search</text>
+  <text x="515" y="657" text-anchor="middle" font-size="10.5" fill="#475569">against agentic-course</text>
+  <rect x="448" y="694" width="134" height="28" rx="14" fill="#d1fae5" stroke="#6ee7b7" />
+  <text x="515" y="712" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">Top-4 PDF Chunks</text>
+
+  <line x1="602" y1="621" x2="622" y2="621" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+
+  
+  <rect x="628" y="486" width="194" height="270" rx="12" fill="#f0fdf4" stroke="#a7f3d0" stroke-width="1.2" />
+  <text x="725" y="514" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Retrieved Context</text>
+  <text x="725" y="531" text-anchor="middle" font-size="10.5" fill="#047857">Formatted with Page Citations</text>
+
+  <rect x="642" y="546" width="166" height="44" rx="6" fill="#ffffff" stroke="#a7f3d0" />
+  <text x="652" y="563" font-size="10" font-weight="700" fill="#047857">[Page 13] Sec 11.3 Dense IR</text>
+  <text x="652" y="579" font-size="9.5" fill="#475569">Vocabulary mismatch problem...</text>
+
+  <rect x="642" y="598" width="166" height="44" rx="6" fill="#ffffff" stroke="#a7f3d0" />
+  <text x="652" y="615" font-size="10" font-weight="700" fill="#047857">[Page 14] Bi-Encoder Arch</text>
+  <text x="652" y="631" font-size="9.5" fill="#475569">Separate encoders BERT_Q/D...</text>
+
+  <rect x="642" y="650" width="166" height="44" rx="6" fill="#ffffff" stroke="#a7f3d0" />
+  <text x="652" y="667" font-size="10" font-weight="700" fill="#047857">[Page 15-17] ColBERT &amp; RAG</text>
+  <text x="652" y="683" font-size="9.5" fill="#475569">MaxSim &amp; retriever-reader...</text>
+
+  <text x="725" y="724" text-anchor="middle" font-size="10.5" font-family="monospace" fill="#065f46">context: str</text>
+
+  <line x1="822" y1="621" x2="842" y2="621" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+
+  
+  <rect x="848" y="486" width="176" height="270" rx="12" fill="#f0fdf4" stroke="#a7f3d0" stroke-width="1.2" />
+  <text x="936" y="514" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Prompt Template</text>
+  <text x="936" y="531" text-anchor="middle" font-size="10.5" font-family="monospace" fill="#047857">ChatPromptTemplate</text>
+
+  <rect x="862" y="546" width="148" height="148" rx="8" fill="#ecfdf5" stroke="#6ee7b7" />
+  <text x="872" y="566" font-size="10" font-weight="700" fill="#065f46">System Guardrail:</text>
+  <text x="872" y="582" font-size="9.5" fill="#1e293b">Answer using ONLY</text>
+  <text x="872" y="596" font-size="9.5" fill="#1e293b">the PDF context +</text>
+  <text x="872" y="610" font-size="9.5" fill="#1e293b">cite page numbers.</text>
+  <line x1="872" y1="622" x2="1000" y2="622" stroke="#a7f3d0" />
+  <text x="872" y="640" font-size="10" font-weight="700" fill="#065f46">Human Message:</text>
+  <text x="872" y="656" font-size="9.5" font-family="monospace" fill="#1e293b">Context: {context}</text>
+  <text x="872" y="672" font-size="9.5" font-family="monospace" fill="#1e293b">Question: {question}</text>
+
+  <text x="936" y="724" text-anchor="middle" font-size="10.5" font-family="monospace" fill="#065f46">prompt | llm (LCEL)</text>
+
+  <line x1="1024" y1="621" x2="1044" y2="621" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+
+  
+  <rect x="1050" y="486" width="154" height="270" rx="12" fill="#fff7ed" stroke="#fdba74" stroke-width="1.3" />
+  <g transform="translate(1127, 546)">
+    <path d="M -22 -6 C -26 -20, -6 -28, 4 -18 C 16 -24, 28 -10, 22 4 C 28 16, 12 28, 0 20 C -12 28, -28 16, -22 -6 Z" fill="#ffedd5" stroke="#ea580c" stroke-width="2" />
+    <circle cx="-8" cy="-4" r="3" fill="#ea580c" />
+    <circle cx="8" cy="-6" r="3" fill="#ea580c" />
+    <circle cx="0" cy="10" r="3" fill="#ea580c" />
+    <line x1="-8" y1="-4" x2="8" y2="-6" stroke="#ea580c" stroke-width="1.5" />
+    <line x1="-8" y1="-4" x2="0" y2="10" stroke="#ea580c" stroke-width="1.5" />
+    <line x1="8" y1="-6" x2="0" y2="10" stroke="#ea580c" stroke-width="1.5" />
+  </g>
+  <text x="1127" y="596" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">ChatGroq LLM</text>
+  <text x="1127" y="614" text-anchor="middle" font-size="10.5" font-family="monospace" fill="#c2410c" font-weight="700">openai/gpt-oss-20b</text>
+  <text x="1127" y="640" text-anchor="middle" font-size="10.5" font-family="monospace" fill="#475569">temperature=0</text>
+  <text x="1127" y="658" text-anchor="middle" font-size="10.5" fill="#475569">init_chat_model()</text>
+  <rect x="1068" y="694" width="118" height="28" rx="6" fill="#ffedd5" />
+  <text x="1127" y="712" text-anchor="middle" font-size="10.5" font-weight="700" fill="#9a3412">Grounded Synthesis</text>
+
+  <line x1="1204" y1="621" x2="1224" y2="621" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+
+  
+  <rect x="1230" y="486" width="126" height="270" rx="12" fill="#f0fdf4" stroke="#6ee7b7" stroke-width="1.3" />
+  <circle cx="1293" cy="532" r="16" fill="#d1fae5" stroke="#059669" stroke-width="1.5" />
+  <path d="M 1286 532 L 1291 537 L 1301 527" fill="none" stroke="#059669" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+  <text x="1293" y="572" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Cited Answer</text>
+  <text x="1293" y="596" text-anchor="middle" font-size="10" fill="#475569">Grounded in</text>
+  <text x="1293" y="611" text-anchor="middle" font-size="10" fill="#475569">Jurafsky &amp; Martin</text>
+  <text x="1293" y="626" text-anchor="middle" font-size="10" fill="#475569">Chapter 11 PDF</text>
+  <rect x="1244" y="654" width="98" height="44" rx="8" fill="#ffffff" stroke="#a7f3d0" />
+  <text x="1293" y="673" text-anchor="middle" font-size="10" font-weight="700" fill="#047857">No Hallucinated</text>
+  <text x="1293" y="687" text-anchor="middle" font-size="10" font-weight="700" fill="#047857">Outside Facts</text>
+
+  
+  
+  
+  <g filter="url(#cardShadow)">
+    <rect x="28" y="794" width="1344" height="68" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" />
+    <rect x="44" y="810" width="188" height="36" rx="8" fill="#0f172a" />
+    <text x="138" y="833" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">Next Step: LangGraph</text>
+    <text x="252" y="824" font-size="12.5" font-weight="700" fill="#0f172a">When to Upgrade This Linear LCEL Chain into a LangGraph StateGraph:</text>
+    <text x="252" y="844" font-size="11.5" fill="#475569">Add typed state (TypedDict), a retrieval-grader node, and a conditional_edge to rewrite low-relevance queries or persist multi-turn threads via a checkpointer.</text>
+  </g>
+
+  
+  
+  
+  <g filter="url(#cardShadow)">
+    <rect x="28" y="878" width="1344" height="78" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" />
+
+    
+    <text x="52" y="905" font-size="12" font-weight="700" fill="#1e3a8a">1. Provision Index (Once)</text>
+    <text x="52" y="925" font-size="11.5" font-family="monospace" fill="#334155">uv run m4-create-index</text>
+    <text x="52" y="942" font-size="10.5" fill="#64748b">Creates 384-dim cosine index in Pinecone</text>
+
+    <line x1="476" y1="892" x2="476" y2="942" stroke="#e2e8f0" stroke-width="1.5" />
+
+    
+    <text x="500" y="905" font-size="12" font-weight="700" fill="#4c1d95">2. Ingest Full PDF (Per Document)</text>
+    <text x="500" y="925" font-size="11.5" font-family="monospace" fill="#334155">uv run m4-load-pdf</text>
+    <text x="500" y="942" font-size="10.5" fill="#64748b">Splits rag.pdf &amp; upserts 384-dim embeddings</text>
+
+    <line x1="924" y1="892" x2="924" y2="942" stroke="#e2e8f0" stroke-width="1.5" />
+
+    
+    <text x="948" y="905" font-size="12" font-weight="700" fill="#064e3b">3. Query &amp; Synthesize (Per Question)</text>
+    <text x="948" y="925" font-size="11.5" font-family="monospace" fill="#334155">uv run m4-query-pdf</text>
+    <text x="948" y="942" font-size="10.5" fill="#64748b">Retrieves top-4 chunks &amp; answers via ChatGroq</text>
+  </g>
+</svg>

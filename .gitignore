@@ -10,7 +10,6 @@ wheels/
 .venv
 .env
 
-blackboard.excalidraw
 inspect.json
 
 rag.pdf
