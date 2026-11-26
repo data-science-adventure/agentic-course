@@ -8,11 +8,12 @@ from pinecone import Pinecone, ServerlessSpec
 
 load_dotenv()
 
+EMBEDDING_DIMENSION = 384  # Matches sentence-transformers/all-MiniLM-L6-v2
 
 def ensure_pinecone_index(
     pc: Pinecone,
     index_name: str,
-    dimension: int = 1536,
+    dimension: int = 384,
     metric: str = "cosine",
     reset: bool = False,
 ) -> None:
@@ -53,14 +54,10 @@ if __name__ == "__main__":
     index_name = os.environ["INDEX_NAME"]
     reset_index = os.getenv("RESET_INDEX", "false").strip().lower() == "true"
 
-    if pc.has_index(index_name):
-        print(f"Index '{index_name}' found, deleting...")
-        pc.delete_index(index_name)
-
     ensure_pinecone_index(
         pc=pc,
         index_name=index_name,
-        dimension=1536,
+        dimension=EMBEDDING_DIMENSION,
         metric="cosine",
         reset=reset_index,
     )
