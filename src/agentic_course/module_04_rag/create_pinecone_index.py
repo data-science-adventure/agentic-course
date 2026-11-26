@@ -44,12 +44,6 @@ def ensure_pinecone_index(
     print(f"Index '{index_name}' created and ready.")
 
 
-def get_vector_store(index_name: str, embeddings: Embeddings) -> PineconeVectorStore:
-    """Bind an existing Pinecone index to a LangChain Embeddings component."""
-    pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
-    return PineconeVectorStore(index=pc.Index(index_name), embedding=embeddings)
-
-
 def main():
     pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
     index_name = os.environ["INDEX_NAME"]
